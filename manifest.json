@@ -1,0 +1,16 @@
+{
+  "short_name": "CoolTech",
+  "name": "CoolTech AC Invoice & Quotation",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/9114/9114031.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#0288d1",
+  "theme_color": "#0288d1",
+  "display": "standalone",
+  "orientation": "portrait"
+}

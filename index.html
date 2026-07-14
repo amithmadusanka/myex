@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoolTech - Invoice & Quotation System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="logo-area">
+                <input type="file" id="logo-input" accept="image/*" style="display:none;">
+                <label for="logo-input" id="logo-label">
+                    <div id="logo-preview">Change Logo</div>
+                </label>
+                <input type="text" id="comp-name" placeholder="Company Name" value="CoolTech AC Solutions">
+            </div>
+            <h1>Invoice & Quotation Creator</h1>
+        </header>
+
+        <main>
+            <section class="doc-type-selector">
+                <label><input type="radio" name="doc-type" value="Quotation" checked> Quotation</label>
+                <label><input type="radio" name="doc-type" value="Invoice"> Invoice</label>
+            </section>
+
+            <section class="details-section">
+                <input type="text" id="client-name" placeholder="Client Name">
+                <input type="text" id="client-phone" placeholder="Client Phone">
+                <input type="date" id="doc-date">
+            </section>
+
+            <section class="items-section">
+                <h3>Items / Services</h3>
+                <div id="items-list"></div>
+                <button type="button" id="add-item-btn" class="btn-secondary">+ Add Item</button>
+            </section>
+
+            <section class="summary-section">
+                <div class="total-display">Total: LKR <span id="grand-total">0.00</span></div>
+            </section>
+
+            <div class="action-buttons">
+                <button type="button" id="save-btn" class="btn-primary">Save Data</button>
+                <button type="button" id="download-pdf-btn" class="btn-success">Download PDF</button>
+            </div>
+        </main>
+    </div>
+
+    <div id="pdf-template" style="display: none;">
+        <div class="pdf-container">
+            <div class="pdf-header">
+                <img id="pdf-logo" src="" alt="Logo" style="max-height: 80px; display:none;">
+                <h2 id="pdf-comp-name"></h2>
+            </div>
+            <hr>
+            <h3 id="pdf-title" style="text-align: center; text-transform: uppercase;"></h3>
+            <div class="pdf-details">
+                <p><strong>To:</strong> <span id="pdf-client"></span></p>
+                <p><strong>Phone:</strong> <span id="pdf-phone"></span></p>
+                <p><strong>Date:</strong> <span id="pdf-date"></span></p>
+            </div>
+            <table class="pdf-table">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody id="pdf-items"></tbody>
+            </table>
+            <div class="pdf-total">
+                <h3>Grand Total: LKR <span id="pdf-total-val"></span></h3>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

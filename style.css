@@ -1,0 +1,132 @@
+:root {
+    --primary-color: #0288d1;
+    --secondary-color: #26c6da;
+    --success-color: #4caf50;
+    --dark-color: #37474f;
+    --light-color: #eceff1;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7f8;
+    margin: 0;
+    padding: 10px;
+    color: var(--dark-color);
+}
+
+.app-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+header {
+    text-align: center;
+    border-bottom: 2px solid var(--light-color);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.logo-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+#logo-preview {
+    width: 80px;
+    height: 80px;
+    border: 2px dashed var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    cursor: pointer;
+    background-size: cover;
+    background-position: center;
+}
+
+#comp-name {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    outline: none;
+    color: var(--primary-color);
+}
+
+h1 { font-size: 20px; margin: 10px 0 0 0; color: #555; }
+
+.doc-type-selector {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+input[type="text"], input[type="date"], input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+.item-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    background: var(--light-color);
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.item-row input { margin: 0; }
+.item-desc { flex: 2; }
+.item-qty { flex: 0.5; }
+.item-price { flex: 1; }
+
+.btn-primary, .btn-secondary, .btn-success, .btn-danger {
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-primary { background: var(--primary-color); color: white; width: 48%; }
+.btn-success { background: var(--success-color); color: white; width: 48%; }
+.btn-secondary { background: var(--secondary-color); color: white; width: 100%; margin-top: 10px;}
+.btn-danger { background: #e53935; color: white; padding: 10px; }
+
+.total-display {
+    font-size: 22px;
+    font-weight: bold;
+    text-align: right;
+    margin: 20px 0;
+    color: var(--primary-color);
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.pdf-container { padding: 30px; color: #000; background: #fff;}
+.pdf-header { display: flex; align-items: center; justify-content: space-between; }
+.pdf-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+.pdf-table th, .pdf-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+.pdf-table th { background-color: #f2f2f2; }
+.pdf-total { text-align: right; margin-top: 20px; }
