@@ -1,8 +1,6 @@
-// Global Application Logs State
 let docHistory = JSON.parse(localStorage.getItem('app_doc_history')) || [];
 
 window.addEventListener('DOMContentLoaded', () => {
-    // Dynamic interaction binds
     document.getElementById('save-profile-btn').addEventListener('click', saveBusinessProfile);
     document.getElementById('logo-input').addEventListener('change', handleLogoUpload);
     document.getElementById('download-pdf-invoice').addEventListener('click', () => generatePDF('Invoice'));
@@ -12,7 +10,6 @@ window.addEventListener('DOMContentLoaded', () => {
     renderHistoryLogList();
     generateNextSequentialNumbers();
     
-    // Default initial UI lines
     addItemRow('invoice-items-list');
     addItemRow('quote-items-list');
     
@@ -67,7 +64,6 @@ function calculateContainerTotal(containerId) {
     document.getElementById(outputId).innerText = grandTotal.toFixed(2);
 }
 
-// PDF Export Logic & Auto Save History Engine
 function generatePDF(type) {
     const isInvoice = type === 'Invoice';
     const prefix = isInvoice ? '' : 'quote-';
@@ -77,9 +73,7 @@ function generatePDF(type) {
     const clientPhone = document.getElementById(`${prefix}client-phone`).value || 'N/A';
     const docDate = document.getElementById(`${prefix}doc-date`).value || new Date().toLocaleDateString();
     const itemsContainer = document.getElementById(isInvoice ? 'invoice-items-list' : 'quote-items-list');
-    const finalAmount = document.getElementById(isInvoice ? 'invoice-grand-total' : 'invoice-grand-total').innerText;
 
-    // Map Template Variables
     document.getElementById('pdf-comp-name').innerText = document.getElementById('comp-name').value;
     document.getElementById('pdf-comp-details').innerText = document.getElementById('comp-details').value;
     document.getElementById('pdf-title').innerText = type;
@@ -121,7 +115,6 @@ function generatePDF(type) {
     const totalCalculated = document.getElementById(isInvoice ? 'invoice-grand-total' : 'quote-grand-total').innerText;
     document.getElementById('pdf-total-val').innerText = totalCalculated;
 
-    // Trigger Offline Log Saving
     if(itemsLogArray.length > 0) {
         saveDocumentToHistory(type, docNum, clientName, totalCalculated, docDate);
     }
@@ -129,24 +122,27 @@ function generatePDF(type) {
     const element = document.getElementById('pdf-template');
     element.style.display = 'block';
     
+    // IMPORTANT: Fixed PDF generation settings for multi-page avoid cutting
     const opt = {
-        margin:       12,
+        margin:       [10, 10, 15, 10], // Top, Left, Bottom, Right spacing
         filename:     `${docNum}_${clientName}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2.5, useCORS: true },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        html2canvas:  { scale: 2, useCORS: true, logging: false },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] } // Smart page splitting
     };
 
     html2pdf().from(element).set(opt).save().then(() => {
         element.style.display = 'none';
-        generateNextSequentialNumbers(); // Bump number up for next run
+        generateNextSequentialNumbers();
+    }).catch(err => {
+        console.error(err);
+        element.style.display = 'none';
     });
 }
 
 function saveDocumentToHistory(type, docNum, client, total, date) {
-    // Prevent duplicate entries on re-downloads
     if(docHistory.some(h => h.docNum === docNum)) return;
-
     docHistory.unshift({ type, docNum, client, total, date });
     localStorage.setItem('app_doc_history', JSON.stringify(docHistory));
     renderHistoryLogList();
