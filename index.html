@@ -2,107 +2,105 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CoolTech - Professional Mobile App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDR Billing Application</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <header class="app-header">
-            <div class="brand-info">
-                <span class="brand-tag">RASA</span>
-                <h1 id="header-title">CoolTech AC Solutions</h1>
-                <p>Invoices & quotes, offline</p>
-            </div>
-            <span class="status-badge">Offline Mode</span>
-        </header>
 
-        <main class="page-body">
+    <div class="app-container">
+        <div class="app-header">
+            <div>
+                <span class="brand-tag">MDR SYSTEMS</span>
+                <h1 id="header-title">CoolTech AC Solutions</h1>
+                <p>Invoices & Quotes, Offline</p>
+            </div>
+            <div class="status-badge">Active</div>
+        </div>
+
+        <div class="page-body">
             
-            <div id="invoice-page" class="app-page active">
+            <div id="page-invoice" class="app-page active">
                 <div class="page-title-area">
-                    <h2>Create Invoice <span class="sub-badge final">Final bill</span></h2>
+                    <h2>Create Invoice <span class="sub-badge final">Final Bill</span></h2>
                 </div>
                 <div class="form-card">
-                    <div class="input-row-flex">
-                        <div class="input-group flex-1">
-                            <label>INVOICE NO</label>
-                            <input type="text" id="invoice-number" readonly style="background-color: #e9e4d4; font-weight: bold;">
-                        </div>
-                        <div class="input-group flex-1">
-                            <label>DATE</label>
-                            <input type="date" id="doc-date">
-                        </div>
+                    <div class="input-group">
+                        <label>INVOICE NUMBER</label>
+                        <input type="text" id="invoice-number" readonly>
                     </div>
                     <div class="input-group">
                         <label>CUSTOMER NAME</label>
-                        <input type="text" id="client-name" placeholder="e.g. Amith Madusanka">
+                        <input type="text" id="client-name" placeholder="e.g. Perera Wedding / Client Name">
                     </div>
                     <div class="input-group">
                         <label>CLIENT PHONE</label>
-                        <input type="text" id="client-phone" placeholder="e.g. 07650921">
+                        <input type="number" id="client-phone" placeholder="07xxxxxxxx">
                     </div>
-                    
+                    <div class="input-group">
+                        <label>DATE</label>
+                        <input type="date" id="doc-date">
+                    </div>
+
                     <fieldset class="items-fieldset">
                         <legend>MENU ITEMS / SERVICES</legend>
-                        <div id="invoice-items-list" class="dynamic-list"></div>
+                        <div id="invoice-items-list">
+                            </div>
                         <button type="button" class="btn-add" onclick="addItemRow('invoice-items-list')">+ Add Service Item</button>
                     </fieldset>
 
                     <div class="total-bar">Total: LKR <span id="invoice-grand-total">0.00</span></div>
-                    <button type="button" id="download-pdf-invoice" class="btn-submit main-action">Download invoice PDF</button>
+                    <button type="button" id="download-pdf-invoice" class="btn-submit main-action">Download Invoice PDF</button>
                 </div>
             </div>
 
-            <div id="quotation-page" class="app-page">
+            <div id="page-quote" class="app-page">
                 <div class="page-title-area">
-                    <h2>Create Quotation <span class="sub-badge estimate">Estimate only</span></h2>
+                    <h2>Create Quotation <span class="sub-badge">Estimate Only</span></h2>
                 </div>
                 <div class="form-card">
-                    <div class="input-row-flex">
-                        <div class="input-group flex-1">
-                            <label>QUOTATION NO</label>
-                            <input type="text" id="quote-number" readonly style="background-color: #e9e4d4; font-weight: bold;">
-                        </div>
-                        <div class="input-group flex-1">
-                            <label>DATE</label>
-                            <input type="date" id="quote-doc-date">
-                        </div>
+                    <div class="input-group">
+                        <label>QUOTATION NUMBER</label>
+                        <input type="text" id="quote-number" readonly>
                     </div>
                     <div class="input-group">
                         <label>PROSPECTIVE CLIENT</label>
-                        <input type="text" id="quote-client-name" placeholder="e.g. Fernando Birthday">
+                        <input type="text" id="quote-client-name" placeholder="e.g. Fernando Birthday / Client">
                     </div>
                     <div class="input-group">
                         <label>CLIENT PHONE</label>
-                        <input type="text" id="quote-client-phone" placeholder="Enter Phone Number">
+                        <input type="number" id="quote-client-phone" placeholder="07xxxxxxxx">
+                    </div>
+                    <div class="input-group">
+                        <label>DATE</label>
+                        <input type="date" id="quote-doc-date">
                     </div>
 
                     <fieldset class="items-fieldset">
-                        <legend>MENU ITEMS / SERVICES</legend>
-                        <div id="quote-items-list" class="dynamic-list"></div>
-                        <button type="button" class="btn-add" onclick="addItemRow('quote-items-list')">+ Add Service Item</button>
+                        <legend>QUOTATION ITEMS</legend>
+                        <div id="quote-items-list">
+                            </div>
+                        <button type="button" class="btn-add" onclick="addItemRow('quote-items-list')">+ Add Quote Item</button>
                     </fieldset>
 
                     <div class="total-bar">Total: LKR <span id="quote-grand-total">0.00</span></div>
-                    <button type="button" id="download-pdf-quote" class="btn-submit main-action">Download quotation PDF</button>
+                    <button type="button" id="download-pdf-quote" class="btn-submit black-btn">Download Quotation PDF</button>
                 </div>
             </div>
 
-            <div id="products-page" class="app-page">
+            <div id="page-history" class="app-page">
                 <div class="page-title-area">
-                    <h2>Document History Log</h2>
+                    <h2>Document Logs <span class="sub-badge estimate">Saved Offline</span></h2>
                 </div>
                 <div class="form-card">
-                    <div class="saved-header">RECENTLY GENERATED DOCUMENTS</div>
-                    <div id="history-items-container" class="db-list">
+                    <div class="saved-header">RECENT TRANSACTIONS</div>
+                    <div id="history-items-container">
                         </div>
                 </div>
             </div>
 
-            <div id="settings-page" class="app-page">
+            <div id="page-settings" class="app-page">
                 <div class="page-title-area">
                     <h2>Business Profile</h2>
                 </div>
@@ -115,94 +113,90 @@
                         <label>CONTACT DETAILS (INVOICE HEADER)</label>
                         <textarea id="comp-details" rows="3" placeholder="Tel: 077 123 4567&#10;Colombo, Sri Lanka"></textarea>
                     </div>
-                    <div class="input-group flex-center">
+                    <div class="input-group">
                         <label>BRAND LOGO</label>
                         <input type="file" id="logo-input" accept="image/*" style="display:none;">
-                        <label for="logo-input" class="logo-uploader-box">
-                            <div id="logo-preview">Tap to upload logo</div>
-                        </label>
+                        <div id="logo-preview" onclick="document.getElementById('logo-input').click();">
+                            Tap to upload logo<br><small>PNG transparent background looks best</small>
+                        </div>
                     </div>
-                    <button type="button" id="save-profile-btn" class="btn-submit green-btn">Save profile changes</button>
+                    <button type="button" id="save-profile-btn" class="btn-submit green-btn">Save Profile Changes</button>
                     <div class="footer-credit">Software by MDR</div>
                 </div>
             </div>
 
-        </main>
+        </div>
 
-        <nav class="bottom-nav">
-            <button class="nav-item active" onclick="switchMobilePage('invoice-page', this)">
-                <span class="nav-icon">📄</span>
-                <span class="nav-label">Invoice</span>
+        <div class="bottom-nav">
+            <button class="nav-item active" onclick="switchMobilePage('page-invoice', this)">
+                <div class="nav-icon">📄</div><div class="nav-label">Invoice</div>
             </button>
-            <button class="nav-item" onclick="switchMobilePage('quotation-page', this)">
-                <span class="nav-icon">📝</span>
-                <span class="nav-label">Quotation</span>
+            <button class="nav-item" onclick="switchMobilePage('page-quote', this)">
+                <div class="nav-icon">📝</div><div class="nav-label">Quotation</div>
             </button>
-            <button class="nav-item" onclick="switchMobilePage('products-page', this)">
-                <span class="nav-icon">📜</span>
-                <span class="nav-label">History</span>
+            <button class="nav-item" onclick="switchMobilePage('page-history', this)">
+                <div class="nav-icon">📦</div><div class="nav-label">History</div>
             </button>
-            <button class="nav-item" onclick="switchMobilePage('settings-page', this)">
-                <span class="nav-icon">⚙️</span>
-                <span class="nav-label">Settings</span>
+            <button class="nav-item" onclick="switchMobilePage('page-settings', this)">
+                <div class="nav-icon">⚙️</div><div class="nav-label">Settings</div>
             </button>
-        </nav>
-    </div>
-
-    <div id="pdf-template" style="display: none;">
-        <div class="pdf-wrapper">
-            <div class="pdf-head-row">
-                <div class="pdf-left-meta">
-                    <img id="pdf-logo" src="" alt="Logo" style="max-height: 75px; display:none; margin-bottom: 10px;">
-                    <h2 id="pdf-comp-name" style="margin: 0; color: #1a252f; font-size: 24px;"></h2>
-                    <p id="pdf-comp-details" style="margin: 3px 0; font-size: 12px; color: #7f8c8d; white-space: pre-line;"></p>
-                </div>
-                <div class="pdf-right-meta" style="text-align: right;">
-                    <h1 id="pdf-title" style="margin: 0; font-size: 28px; color: #2c3e50; letter-spacing: 1px;"></h1>
-                    <p style="margin: 15px 0 5px 0; font-size: 13px;"><strong>Document No:</strong> <span id="pdf-doc-number"></span></p>
-                    <p style="margin: 0; font-size: 13px;"><strong>Date:</strong> <span id="pdf-date"></span></p>
-                </div>
-            </div>
-            
-            <div class="pdf-bill-to" style="margin: 30px 0; background: #f8f9fa; padding: 15px; border-radius: 6px;">
-                <h4 style="margin: 0 0 8px 0; color: #7f8c8d; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;">Bill To:</h4>
-                <p style="margin: 0 0 4px 0; font-size: 15px; color: #2c3e50;"><strong><span id="pdf-client"></span></strong></p>
-                <p style="margin: 0; font-size: 13px; color: #555;">Phone: <span id="pdf-phone"></span></p>
-            </div>
-
-            <table class="pdf-main-table" style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-                <thead>
-                    <tr style="background-color: #2c3e50; color: white;">
-                        <th style="padding: 12px; text-align: left; font-size: 13px;">Description / Service Rendered</th>
-                        <th style="padding: 12px; text-align: center; font-size: 13px; width: 10%;">Qty</th>
-                        <th style="padding: 12px; text-align: right; font-size: 13px; width: 22%;">Unit Price</th>
-                        <th style="padding: 12px; text-align: right; font-size: 13px; width: 22%;">Total</th>
-                    </tr>
-                </thead>
-                <tbody id="pdf-items"></tbody>
-            </table>
-
-            <div class="pdf-bottom-block" style="margin-top: 30px; display: flex; justify-content: space-between; align-items: flex-start;">
-                <div class="pdf-notice" style="width: 50%; font-size: 12px; color: #7f8c8d; line-height: 1.5;">
-                    <p><strong>Terms & Conditions:</strong><br>
-                    Thank you for your business. Payment is due within the agreed terms. Valid offline generated copy.</p>
-                </div>
-                <div class="pdf-total-box" style="width: 40%; text-align: right; border-top: 2px solid #2c3e50; padding-top: 10px;">
-                    <h2 style="margin: 0; color: #2c3e50; font-size: 20px;">Grand Total:<br><span style="font-size: 24px; color: #e67e22;">LKR <span id="pdf-total-val"></span></span></h2>
-                </div>
-            </div>
-
-            <div class="pdf-signature-area" style="margin-top: 70px; display: flex; justify-content: space-between;">
-                <div style="width: 40%; text-align: center; border-top: 1px solid #bdc3c7; padding-top: 8px; font-size: 13px; color: #7f8c8d;">
-                    Customer Signature
-                </div>
-                <div style="width: 40%; text-align: center; border-top: 1px solid #bdc3c7; padding-top: 8px; font-size: 13px; color: #2c3e50; font-weight: bold;">
-                    Authorized Signature
-                </div>
-            </div>
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <div id="pdf-template" style="display: none; background: #fff;">
+        <div class="pdf-wrapper">
+            
+            <div class="pdf-head-row">
+                <div>
+                    <h2 id="pdf-comp-name" style="margin:0 0 5px 0; color:#2c3e50; font-size:22px;">Company Name</h2>
+                    <p id="pdf-comp-details" style="margin:0; font-size:12px; color:#555; white-space:pre-line;">Company Contacts</p>
+                </div>
+                <div style="text-align: right;">
+                    <img id="pdf-logo" src="" alt="Logo" style="max-height: 55px; max-width: 120px; display: none; margin-bottom: 5px; margin-left: auto;">
+                    <h1 id="pdf-title" style="margin:0; font-size:26px; color:#2c3e50; text-transform:uppercase; letter-spacing:1px;">DOCUMENT</h1>
+                    <p style="margin:4px 0 0 0; font-size:12px; color:#333;"><strong>No:</strong> <span id="pdf-doc-number">0000</span></p>
+                    <p style="margin:2px 0 0 0; font-size:12px; color:#333;"><strong>Date:</strong> <span id="pdf-date">0000-00-00</span></p>
+                </div>
+            </div>
+
+            <div style="margin: 25px 0; background: #f8fafc; padding: 12px; border-radius: 6px; border-left: 4px solid #2c3e50;">
+                <p style="margin: 0 0 4px 0; font-size: 11px; text-transform: uppercase; color: #64748b; font-weight: bold; letter-spacing: 0.5px;">Bill To:</p>
+                <h3 id="pdf-client" style="margin: 0 0 2px 0; font-size: 15px; color: #1e293b;">Client Name</h3>
+                <p style="margin: 0; font-size: 13px; color: #475569;"><strong>Phone:</strong> <span id="pdf-phone">N/A</span></p>
+            </div>
+
+            <table class="pdf-main-table" style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                <thead>
+                    <tr style="background-color: #2c3e50; color: white; text-align: left;">
+                        <th style="padding: 10px; font-size: 12px; width: 55%;">DESCRIPTION / SERVICE RENDERED</th>
+                        <th style="padding: 10px; font-size: 12px; text-align: center; width: 10%;">QTY</th>
+                        <th style="padding: 10px; font-size: 12px; text-align: right; width: 15%;">UNIT PRICE</th>
+                        <th style="padding: 10px; font-size: 12px; text-align: right; width: 20%;">TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody id="pdf-items">
+                    </tbody>
+            </table>
+
+            <div class="pdf-bottom-block" style="margin-top: 30px;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td style="width: 50%; vertical-align: bottom;">
+                            <div class="pdf-signature-area" style="width: 160px; text-align: center;">
+                                <div style="border-bottom: 1px solid #000; height: 40px;"></div>
+                                <p style="margin: 5px 0 0 0; font-size: 12px; color: #555; font-weight: bold;">Authorized Signature</p>
+                            </div>
+                        </td>
+                        <td style="width: 50%; text-align: right; vertical-align: top;">
+                            <div style="display: inline-block; background: #2c3e50; color: white; padding: 12px 20px; border-radius: 6px; min-width: 200px;">
+                                <span style="font-size: 11px; display: block; text-transform: uppercase; opacity: 0.8; letter-spacing: 0.5px;">Amount Due (LKR)</span>
+                                <span id="pdf-total-val" style="font-size: 20px; font-weight: bold; display: block; margin-top: 2px;">0.00</span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </div> </div> <script src="app.js"></script>
 </body>
 </html>
