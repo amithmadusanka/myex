@@ -1,179 +1,198 @@
+// Service Worker Registration
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-            .then(reg => console.log('Service Worker Registered'))
-            .catch(err => console.log('Service Worker Fail', err));
+        navigator.serviceWorker.register('sw.js').catch(err => console.log('SW Fail', err));
     });
 }
 
-// Global Event Listeners
-document.getElementById('add-item-btn').addEventListener('click', () => addItemRow());
-document.getElementById('save-btn').addEventListener('click', saveToLocalStorage);
-document.getElementById('save-settings-btn').addEventListener('click', saveBusinessProfile);
-document.getElementById('download-pdf-btn').addEventListener('click', generatePDF);
-document.getElementById('logo-input').addEventListener('change', loadLogo);
-document.getElementById('load-saved-btn').addEventListener('click', reloadSavedDataToEditor);
+// Global Application State Objects
+let itemDatabase = JSON.parse(localStorage.getItem('app_item_db')) || [];
 
-window.addEventListener('DOMContentLoaded', initializeApp);
+window.addEventListener('DOMContentLoaded', () => {
+    // Attach trigger interactions
+    document.getElementById('save-db-item-btn').addEventListener('click', saveNewProductToDB);
+    document.getElementById('save-profile-btn').addEventListener('click', saveBusinessProfile);
+    document.getElementById('logo-input').addEventListener('change', handleLogoUpload);
+    document.getElementById('download-pdf-invoice').addEventListener('click', () => generatePDF('Invoice'));
+    document.getElementById('download-pdf-quote').addEventListener('click', () => generatePDF('Quotation'));
 
-// Tab Navigation Logic
-function openTab(evt, tabId) {
-    const tabContents = document.getElementsByClassName("tab-content");
-    for (let i = 0; i < tabContents.length; i++) {
-        tabContents[i].classList.remove("active");
-    }
+    // Init UI Setup
+    loadProfileDetails();
+    renderProductDatabaseList();
+    
+    // Add default single rows to constructors
+    addItemRow('invoice-items-list');
+    addItemRow('quote-items-list');
+    
+    // Auto insert current date
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('doc-date').value = today;
+    document.getElementById('quote-doc-date').value = today;
+});
 
-    const tabBtns = document.getElementsByClassName("tab-btn");
-    for (let i = 0; i < tabBtns.length; i++) {
-        tabBtns[i].classList.remove("active");
-    }
+// Navigation Controller Logic
+function switchMobilePage(pageId, element) {
+    // Hide all viewports
+    document.querySelectorAll('.app-page').forEach(page => page.classList.remove('active'));
+    // Deactivate navbar elements
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
 
-    document.getElementById(tabId).classList.add("active");
-    evt.currentTarget.classList.add("active");
+    // Render targeted items active
+    document.getElementById(pageId).classList.add('active');
+    element.classList.add('active');
 }
 
-function addItemRow(desc = '', qty = 1, price = '') {
-    const itemsList = document.getElementById('items-list');
+// Dynamic Workspace Row Logic
+function addItemRow(containerId) {
+    const targetContainer = document.getElementById(containerId);
+    const rowId = 'row_' + Date.now() + Math.random().toString(36).substr(2, 4);
+
     const row = document.createElement('div');
     row.className = 'item-row';
+    row.id = rowId;
     row.innerHTML = `
-        <input type="text" class="item-desc" placeholder="Service / Job Description" value="${desc}" required>
-        <input type="number" class="item-qty" placeholder="Qty" value="${qty}" min="1" required>
-        <input type="number" class="item-price" placeholder="Price" value="${price}" required>
-        <button type="button" class="btn-danger" onclick="this.parentElement.remove(); calculateTotal();">X</button>
+        <input type="text" class="item-desc" placeholder="Item / Service Name" style="flex:2;" required>
+        <input type="number" class="item-qty" placeholder="Qty" value="1" style="flex:0.5;" required>
+        <input type="number" class="item-price" placeholder="Price" style="flex:1;" required>
+        <button type="button" class="btn-del" onclick="document.getElementById('${rowId}').remove(); calculateContainerTotal('${containerId}');">X</button>
     `;
-    itemsList.appendChild(row);
-    
-    row.querySelector('.item-qty').addEventListener('input', calculateTotal);
-    row.querySelector('.item-price').addEventListener('input', calculateTotal);
-    calculateTotal();
+    targetContainer.appendChild(row);
+
+    row.querySelector('.item-qty').addEventListener('input', () => calculateContainerTotal(containerId));
+    row.querySelector('.item-price').addEventListener('input', () => calculateContainerTotal(containerId));
 }
 
-function calculateTotal() {
+function calculateContainerTotal(containerId) {
     let grandTotal = 0;
-    const rows = document.querySelectorAll('.item-row');
+    const container = document.getElementById(containerId);
+    const rows = container.querySelectorAll('.item-row');
+    
     rows.forEach(row => {
         const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
         const price = parseFloat(row.querySelector('.item-price').value) || 0;
         grandTotal += qty * price;
     });
-    document.getElementById('grand-total').innerText = grandTotal.toFixed(2);
+
+    const outputSpanId = containerId === 'invoice-items-list' ? 'invoice-grand-total' : 'quote-grand-total';
+    document.getElementById(outputSpanId).innerText = grandTotal.toFixed(2);
 }
 
-function loadLogo(event) {
+// Database Product Logic (Page 3)
+function saveNewProductToDB() {
+    const nameInput = document.getElementById('db-item-name');
+    const priceInput = document.getElementById('db-item-price');
+
+    if(!nameInput.value || !priceInput.value) return alert('Please enter both name and price!');
+
+    itemDatabase.push({
+        id: Date.now(),
+        name: nameInput.value,
+        price: parseFloat(priceInput.value).toFixed(2)
+    });
+
+    localStorage.setItem('app_item_db', JSON.stringify(itemDatabase));
+    nameInput.value = '';
+    priceInput.value = '';
+    renderProductDatabaseList();
+}
+
+function renderProductDatabaseList() {
+    const listContainer = document.getElementById('db-items-container');
+    listContainer.innerHTML = '';
+
+    if(itemDatabase.length === 0) {
+        listContainer.innerHTML = `<p style="text-align:center;color:#999;font-size:13px;padding:10px;">No items inside database yet.</p>`;
+        return;
+    }
+
+    itemDatabase.forEach(item => {
+        const itemElement = document.createElement('div');
+        itemElement.className = 'db-list-item';
+        itemElement.innerHTML = `
+            <div>
+                <strong>${item.name}</strong><br>
+                <small style="color:#e67e22;">LKR ${item.price}</small>
+            </div>
+            <button class="btn-del" onclick="deleteProductFromDB(${item.id})">Remove</button>
+        `;
+        listContainer.appendChild(itemElement);
+    });
+}
+
+function deleteProductFromDB(id) {
+    itemDatabase = itemDatabase.filter(item => item.id !== id);
+    localStorage.setItem('app_item_db', JSON.stringify(itemDatabase));
+    renderProductDatabaseList();
+}
+
+// Business Configuration Profile Logic (Page 4)
+function saveBusinessProfile() {
+    const compName = document.getElementById('comp-name').value;
+    const compDetails = document.getElementById('comp-details').value;
+    
+    localStorage.setItem('cooltech_comp_name', compName);
+    localStorage.setItem('cooltech_comp_details', compDetails);
+    
+    document.getElementById('header-title').innerText = compName;
+    alert('Profile saved successfully!');
+}
+
+function loadProfileDetails() {
+    const savedLogo = localStorage.getItem('cooltech_logo');
+    if (savedLogo) {
+        document.getElementById('logo-preview').style.backgroundImage = `url(${savedLogo})`;
+        document.getElementById('logo-preview').innerHTML = '';
+    }
+    const savedCompName = localStorage.getItem('cooltech_comp_name');
+    if (savedCompName) {
+        document.getElementById('comp-name').value = savedCompName;
+        document.getElementById('header-title').innerText = savedCompName;
+    }
+    const savedDetails = localStorage.getItem('cooltech_comp_details');
+    if (savedDetails) {
+        document.getElementById('comp-details').value = savedDetails;
+    }
+}
+
+function handleLogoUpload(event) {
     const file = event.target.files[0];
     if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
             document.getElementById('logo-preview').style.backgroundImage = `url(${e.target.result})`;
-            document.getElementById('logo-preview').innerText = '';
+            document.getElementById('logo-preview').innerHTML = '';
             localStorage.setItem('cooltech_logo', e.target.result);
         };
         reader.readAsDataURL(file);
     }
 }
 
-function saveBusinessProfile() {
-    const compName = document.getElementById('comp-name').value;
-    localStorage.setItem('cooltech_comp_name', compName);
-    alert('Business Profile updated successfully!');
-}
-
-function saveToLocalStorage() {
-    const data = {
-        clientName: document.getElementById('client-name').value,
-        clientPhone: document.getElementById('client-phone').value,
-        docDate: document.getElementById('doc-date').value,
-        docType: document.querySelector('input[name="doc-type"]:checked').value,
-        totalAmount: document.getElementById('grand-total').innerText,
-        items: []
-    };
-
-    document.querySelectorAll('.item-row').forEach(row => {
-        data.items.push({
-            desc: row.querySelector('.item-desc').value,
-            qty: row.querySelector('.item-qty').value,
-            price: row.querySelector('.item-price').value
-        });
-    });
-
-    localStorage.setItem('cooltech_saved_invoice', JSON.stringify(data));
-    updateSavedRecordsTab(data);
-    alert('Document saved successfully offline!');
-}
-
-function initializeApp() {
-    // Load Saved Profile Data
-    const savedLogo = localStorage.getItem('cooltech_logo');
-    if (savedLogo) {
-        document.getElementById('logo-preview').style.backgroundImage = `url(${savedLogo})`;
-        document.getElementById('logo-preview').innerText = '';
-    }
+// PDF Document Generation Engine
+function generatePDF(type) {
+    const isInvoice = type === 'Invoice';
+    const prefix = isInvoice ? '' : 'quote-';
     
-    const savedCompName = localStorage.getItem('cooltech_comp_name');
-    if (savedCompName) {
-        document.getElementById('comp-name').value = savedCompName;
-    }
+    const clientName = document.getElementById(`${prefix}client-name`).value || 'N/A';
+    const clientPhone = document.getElementById(`${prefix}client-phone`).value || 'N/A';
+    const docDate = document.getElementById(`${prefix}doc-date`).value || new Date().toLocaleDateString();
+    const itemsContainer = document.getElementById(isInvoice ? 'invoice-items-list' : 'quote-items-list');
 
-    // Load Document Logs
-    const savedData = JSON.parse(localStorage.getItem('cooltech_saved_invoice'));
-    if (savedData) {
-        updateSavedRecordsTab(savedData);
-    }
-    
-    addItemRow(); // Default initial item row
-}
-
-function updateSavedRecordsTab(data) {
-    document.getElementById('no-data-msg').style.display = 'none';
-    document.getElementById('saved-data-details').style.display = 'block';
-    document.getElementById('saved-doc-type').innerText = data.docType;
-    document.getElementById('saved-client-name').innerText = data.clientName || 'Unknown';
-    document.getElementById('saved-total-amount').innerText = data.totalAmount;
-}
-
-function reloadSavedDataToEditor() {
-    const savedData = JSON.parse(localStorage.getItem('cooltech_saved_invoice'));
-    if (savedData) {
-        document.getElementById('client-name').value = savedData.clientName || '';
-        document.getElementById('client-phone').value = savedData.clientPhone || '';
-        document.getElementById('doc-date').value = savedData.docDate || '';
-        
-        const radioButton = document.querySelector(`input[name="doc-type"][value="${savedData.docType}"]`);
-        if (radioButton) radioButton.checked = true;
-
-        const itemsList = document.getElementById('items-list');
-        itemsList.innerHTML = ''; // Clear current rows
-        
-        savedData.items.forEach(item => addItemRow(item.desc, item.qty, item.price));
-        
-        // Switch to the create document tab automatically
-        document.querySelector('[onclick*="create-tab"]').click();
-    }
-}
-
-function generatePDF() {
-    const docType = document.querySelector('input[name="doc-type"]:checked').value;
-    
-    document.getElementById('pdf-comp-name').innerText = document.getElementById('comp-name').value || 'CoolTech AC Solutions';
-    document.getElementById('pdf-title').innerText = docType;
-    document.getElementById('pdf-client').innerText = document.getElementById('client-name').value || 'N/A';
-    document.getElementById('pdf-phone').innerText = document.getElementById('client-phone').value || 'N/A';
-    document.getElementById('pdf-date').innerText = document.getElementById('doc-date').value || new Date().toLocaleDateString();
+    document.getElementById('pdf-comp-name').innerText = document.getElementById('comp-name').value;
+    document.getElementById('pdf-title').innerText = type;
+    document.getElementById('pdf-client').innerText = clientName;
+    document.getElementById('pdf-phone').innerText = clientPhone;
+    document.getElementById('pdf-date').innerText = docDate;
     
     const savedLogo = localStorage.getItem('cooltech_logo');
     const pdfLogo = document.getElementById('pdf-logo');
-    if (savedLogo) {
-        pdfLogo.src = savedLogo;
-        pdfLogo.style.display = 'block';
-    } else {
-        pdfLogo.style.display = 'none';
-    }
+    if (savedLogo) { pdfLogo.src = savedLogo; pdfLogo.style.display = 'block'; } 
+    else { pdfLogo.style.display = 'none'; }
 
     const pdfItems = document.getElementById('pdf-items');
     pdfItems.innerHTML = '';
     
-    document.querySelectorAll('.item-row').forEach(row => {
+    const rows = itemsContainer.querySelectorAll('.item-row');
+    rows.forEach(row => {
         const desc = row.querySelector('.item-desc').value;
         const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
         const price = parseFloat(row.querySelector('.item-price').value) || 0;
@@ -191,14 +210,14 @@ function generatePDF() {
         }
     });
 
-    document.getElementById('pdf-total-val').innerText = document.getElementById('grand-total').innerText;
+    document.getElementById('pdf-total-val').innerText = document.getElementById(isInvoice ? 'invoice-grand-total' : 'quote-grand-total').innerText;
 
     const element = document.getElementById('pdf-template');
     element.style.display = 'block';
     
     const opt = {
         margin:       10,
-        filename:     `${docType}_${document.getElementById('client-name').value || 'Customer'}.pdf`,
+        filename:     `${type}_${clientName}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2 },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
