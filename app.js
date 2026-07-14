@@ -73,7 +73,9 @@ function generatePDF(type) {
     const clientPhone = document.getElementById(`${prefix}client-phone`).value || 'N/A';
     const docDate = document.getElementById(`${prefix}doc-date`).value || new Date().toLocaleDateString();
     const itemsContainer = document.getElementById(isInvoice ? 'invoice-items-list' : 'quote-items-list');
+    const finalAmount = document.getElementById(isInvoice ? 'invoice-grand-total' : 'quote-grand-total').innerText;
 
+    // Map Dynamic Document Elements
     document.getElementById('pdf-comp-name').innerText = document.getElementById('comp-name').value;
     document.getElementById('pdf-comp-details').innerText = document.getElementById('comp-details').value;
     document.getElementById('pdf-title').innerText = type;
@@ -112,24 +114,33 @@ function generatePDF(type) {
         }
     });
 
-    const totalCalculated = document.getElementById(isInvoice ? 'invoice-grand-total' : 'quote-grand-total').innerText;
-    document.getElementById('pdf-total-val').innerText = totalCalculated;
+    document.getElementById('pdf-total-val').innerText = finalAmount;
+
+    // Add Software Credit Row dynamically inside the print template before rendering
+    let templateRoot = document.getElementById('pdf-template').querySelector('.pdf-wrapper');
+    let dynamicBranding = templateRoot.querySelector('.pdf-footer-branding');
+    if (!dynamicBranding) {
+        dynamicBranding = document.createElement('div');
+        dynamicBranding.className = 'pdf-footer-branding';
+        dynamicBranding.innerText = 'Software by MDR';
+        templateRoot.appendChild(dynamicBranding);
+    }
 
     if(itemsLogArray.length > 0) {
-        saveDocumentToHistory(type, docNum, clientName, totalCalculated, docDate);
+        saveDocumentToHistory(type, docNum, clientName, finalAmount, docDate);
     }
 
     const element = document.getElementById('pdf-template');
     element.style.display = 'block';
     
-    // IMPORTANT: Fixed PDF generation settings for multi-page avoid cutting
+    // Configured configurations to maintain proportions and auto page split elegantly
     const opt = {
-        margin:       [10, 10, 15, 10], // Top, Left, Bottom, Right spacing
+        margin:       [12, 12, 12, 12],
         filename:     `${docNum}_${clientName}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true, logging: false },
+        html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] } // Smart page splitting
+        pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
     };
 
     html2pdf().from(element).set(opt).save().then(() => {
