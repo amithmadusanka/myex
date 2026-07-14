@@ -78,20 +78,38 @@ legend { font-size: 11px; font-weight: bold; color: #8c8071; padding: 0 6px; }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-/* PDF PRINTING STYLES SHEET - FIXED FOR PAGE BREAKS */
+/* ========================================================
+   HIGH QUALITY PDF EXPORT PRINT STYLES (WITH DOUBLE BORDER)
+   ======================================================== */
 .pdf-wrapper { 
     padding: 30px; 
     background: #fff; 
     color: #000; 
     font-family: Arial, sans-serif; 
     box-sizing: border-box;
+    width: 100%;
+    /* Double Border Effect */
+    border: 6px double #2c3e50;
+    position: relative;
 }
-.pdf-head-row { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #2c3e50; padding-bottom: 15px; }
+.pdf-head-row { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #2c3e50; padding-bottom: 15px; }
 .pdf-main-table th { border-bottom: 2px solid #2c3e50; text-transform: uppercase; font-weight: bold; }
 .pdf-main-table td { padding: 10px; border-bottom: 1px solid #e2e8f0; font-size: 13px; }
 
-/* Forces total block and signatures to avoid split errors */
-.pdf-bottom-block, .pdf-signature-area { 
+/* Fixed page-break gaps to cleanly support 2-page documents if text gets long */
+.pdf-bottom-block, .pdf-signature-area, .pdf-footer-branding { 
     page-break-inside: avoid; 
     break-inside: avoid; 
+}
+
+.pdf-footer-branding {
+    margin-top: 50px;
+    text-align: center;
+    font-size: 10px;
+    font-weight: bold;
+    color: #bdc3c7;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-top: 1px dashed #e2e8f0;
+    padding-top: 10px;
 }
