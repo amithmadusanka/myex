@@ -60,7 +60,6 @@ legend { font-size: 11px; font-weight: bold; color: #8c8071; padding: 0 6px; }
 .total-bar { text-align: right; font-size: 18px; font-weight: bold; margin: 15px 0; color: var(--brand-bg); }
 .saved-header { font-weight: bold; font-size: 12px; margin-bottom: 15px; color: #7d7265; border-bottom: 1px solid #ddd; padding-bottom: 5px;}
 
-/* History Records Layout styling */
 .history-card {
     background: #faf8f2; border: 1px solid #e2dac2; padding: 12px;
     border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
@@ -71,7 +70,6 @@ legend { font-size: 11px; font-weight: bold; color: #8c8071; padding: 0 6px; }
 #logo-preview { border: 2px dashed #bbb; border-radius: 10px; padding: 20px; text-align: center; color: #777; background: #fafafa; background-size: cover; background-position: center; height: 90px; }
 .footer-credit { text-align: center; font-size: 11px; margin-top: 30px; color: #aaa; }
 
-/* Bottom Nav bar rules */
 .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #fff; display: flex; border-top: 1px solid #eee; padding-bottom: env(safe-area-inset-bottom); z-index: 999; }
 .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 0; background: none; border: none; color: #95a5a6; cursor: pointer;}
 .nav-item.active { color: var(--active-orange); }
@@ -80,8 +78,20 @@ legend { font-size: 11px; font-weight: bold; color: #8c8071; padding: 0 6px; }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-/* PDF PRINTING STYLES SHEET */
-.pdf-wrapper { padding: 40px; background: #fff; color: #000; font-family: Arial, sans-serif; }
+/* PDF PRINTING STYLES SHEET - FIXED FOR PAGE BREAKS */
+.pdf-wrapper { 
+    padding: 30px; 
+    background: #fff; 
+    color: #000; 
+    font-family: Arial, sans-serif; 
+    box-sizing: border-box;
+}
 .pdf-head-row { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #2c3e50; padding-bottom: 15px; }
 .pdf-main-table th { border-bottom: 2px solid #2c3e50; text-transform: uppercase; font-weight: bold; }
 .pdf-main-table td { padding: 10px; border-bottom: 1px solid #e2e8f0; font-size: 13px; }
+
+/* Forces total block and signatures to avoid split errors */
+.pdf-bottom-block, .pdf-signature-area { 
+    page-break-inside: avoid; 
+    break-inside: avoid; 
+}
