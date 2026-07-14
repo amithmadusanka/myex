@@ -1,8 +1,3 @@
-
-
-
-
-
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js')
@@ -11,19 +6,38 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-document.getElementById('add-item-btn').addEventListener('click', addItemRow);
+// Global Event Listeners
+document.getElementById('add-item-btn').addEventListener('click', () => addItemRow());
 document.getElementById('save-btn').addEventListener('click', saveToLocalStorage);
+document.getElementById('save-settings-btn').addEventListener('click', saveBusinessProfile);
 document.getElementById('download-pdf-btn').addEventListener('click', generatePDF);
 document.getElementById('logo-input').addEventListener('change', loadLogo);
+document.getElementById('load-saved-btn').addEventListener('click', reloadSavedDataToEditor);
 
-window.addEventListener('DOMContentLoaded', loadSavedData);
+window.addEventListener('DOMContentLoaded', initializeApp);
+
+// Tab Navigation Logic
+function openTab(evt, tabId) {
+    const tabContents = document.getElementsByClassName("tab-content");
+    for (let i = 0; i < tabContents.length; i++) {
+        tabContents[i].classList.remove("active");
+    }
+
+    const tabBtns = document.getElementsByClassName("tab-btn");
+    for (let i = 0; i < tabBtns.length; i++) {
+        tabBtns[i].classList.remove("active");
+    }
+
+    document.getElementById(tabId).classList.add("active");
+    evt.currentTarget.classList.add("active");
+}
 
 function addItemRow(desc = '', qty = 1, price = '') {
     const itemsList = document.getElementById('items-list');
     const row = document.createElement('div');
     row.className = 'item-row';
     row.innerHTML = `
-        <input type="text" class="item-desc" placeholder="Service/Item Description" value="${desc}" required>
+        <input type="text" class="item-desc" placeholder="Service / Job Description" value="${desc}" required>
         <input type="number" class="item-qty" placeholder="Qty" value="${qty}" min="1" required>
         <input type="number" class="item-price" placeholder="Price" value="${price}" required>
         <button type="button" class="btn-danger" onclick="this.parentElement.remove(); calculateTotal();">X</button>
@@ -59,13 +73,19 @@ function loadLogo(event) {
     }
 }
 
+function saveBusinessProfile() {
+    const compName = document.getElementById('comp-name').value;
+    localStorage.setItem('cooltech_comp_name', compName);
+    alert('Business Profile updated successfully!');
+}
+
 function saveToLocalStorage() {
     const data = {
-        compName: document.getElementById('comp-name').value,
         clientName: document.getElementById('client-name').value,
         clientPhone: document.getElementById('client-phone').value,
         docDate: document.getElementById('doc-date').value,
         docType: document.querySelector('input[name="doc-type"]:checked').value,
+        totalAmount: document.getElementById('grand-total').innerText,
         items: []
     };
 
@@ -78,37 +98,64 @@ function saveToLocalStorage() {
     });
 
     localStorage.setItem('cooltech_saved_invoice', JSON.stringify(data));
-    alert('Data saved successfully offline!');
+    updateSavedRecordsTab(data);
+    alert('Document saved successfully offline!');
 }
 
-function loadSavedData() {
+function initializeApp() {
+    // Load Saved Profile Data
     const savedLogo = localStorage.getItem('cooltech_logo');
     if (savedLogo) {
         document.getElementById('logo-preview').style.backgroundImage = `url(${savedLogo})`;
         document.getElementById('logo-preview').innerText = '';
     }
     
+    const savedCompName = localStorage.getItem('cooltech_comp_name');
+    if (savedCompName) {
+        document.getElementById('comp-name').value = savedCompName;
+    }
+
+    // Load Document Logs
     const savedData = JSON.parse(localStorage.getItem('cooltech_saved_invoice'));
     if (savedData) {
-        document.getElementById('comp-name').value = savedData.compName || 'CoolTech AC Solutions';
+        updateSavedRecordsTab(savedData);
+    }
+    
+    addItemRow(); // Default initial item row
+}
+
+function updateSavedRecordsTab(data) {
+    document.getElementById('no-data-msg').style.display = 'none';
+    document.getElementById('saved-data-details').style.display = 'block';
+    document.getElementById('saved-doc-type').innerText = data.docType;
+    document.getElementById('saved-client-name').innerText = data.clientName || 'Unknown';
+    document.getElementById('saved-total-amount').innerText = data.totalAmount;
+}
+
+function reloadSavedDataToEditor() {
+    const savedData = JSON.parse(localStorage.getItem('cooltech_saved_invoice'));
+    if (savedData) {
         document.getElementById('client-name').value = savedData.clientName || '';
         document.getElementById('client-phone').value = savedData.clientPhone || '';
         document.getElementById('doc-date').value = savedData.docDate || '';
         
-        if(savedData.items && savedData.items.length > 0) {
-            savedData.items.forEach(item => addItemRow(item.desc, item.qty, item.price));
-        } else {
-            addItemRow();
-        }
-    } else {
-        addItemRow();
+        const radioButton = document.querySelector(`input[name="doc-type"][value="${savedData.docType}"]`);
+        if (radioButton) radioButton.checked = true;
+
+        const itemsList = document.getElementById('items-list');
+        itemsList.innerHTML = ''; // Clear current rows
+        
+        savedData.items.forEach(item => addItemRow(item.desc, item.qty, item.price));
+        
+        // Switch to the create document tab automatically
+        document.querySelector('[onclick*="create-tab"]').click();
     }
 }
 
 function generatePDF() {
     const docType = document.querySelector('input[name="doc-type"]:checked').value;
     
-    document.getElementById('pdf-comp-name').innerText = document.getElementById('comp-name').value;
+    document.getElementById('pdf-comp-name').innerText = document.getElementById('comp-name').value || 'CoolTech AC Solutions';
     document.getElementById('pdf-title').innerText = docType;
     document.getElementById('pdf-client').innerText = document.getElementById('client-name').value || 'N/A';
     document.getElementById('pdf-phone').innerText = document.getElementById('client-phone').value || 'N/A';
