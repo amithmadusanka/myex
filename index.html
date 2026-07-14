@@ -10,74 +10,100 @@
 </head>
 <body>
     <div class="app-container">
-        <header>
-            <h1>CoolTech AC Solutions</h1>
-        </header>
+        <!-- Navigation Bar representing Separate Pages -->
+        <nav class="app-nav">
+            <button class="nav-link active" onclick="openTab(event, 'settings-tab')">
+                <span class="nav-icon">🏢</span> Business Profile
+            </button>
+            <button class="nav-link" onclick="openTab(event, 'create-tab')">
+                <span class="nav-icon">📄</span> Create Document
+            </button>
+            <button class="nav-link" onclick="openTab(event, 'records-tab')">
+                <span class="nav-icon">💾</span> Saved History
+            </button>
+        </nav>
 
-        <!-- Navigation Tabs -->
-        <div class="tab-navigation">
-            <button class="tab-btn active" onclick="openTab(event, 'settings-tab')">Business Info</button>
-            <button class="tab-btn" onclick="openTab(event, 'create-tab')">Create Document</button>
-            <button class="tab-btn" onclick="openTab(event, 'records-tab')">Saved Data</button>
-        </div>
-
-        <main>
-            <!-- Tab 1: Business Settings -->
+        <main class="page-container">
+            <!-- PAGE 1: Business Settings -->
             <div id="settings-tab" class="tab-content active">
-                <h2>Business Profile</h2>
-                <div class="form-group">
-                    <label>Company Logo</label>
-                    <input type="file" id="logo-input" accept="image/*" style="display:none;">
-                    <label for="logo-input" id="logo-label">
-                        <div id="logo-preview">Upload Logo</div>
-                    </label>
+                <div class="page-header">
+                    <h2>Business Profile Settings</h2>
+                    <p>Configure your company identity for invoices and quotations.</p>
                 </div>
-                <div class="form-group">
-                    <label>Company Name</label>
-                    <input type="text" id="comp-name" placeholder="Enter Company Name" value="CoolTech AC Solutions">
+                
+                <div class="card">
+                    <div class="form-group flex-center">
+                        <label>Company Logo</label>
+                        <input type="file" id="logo-input" accept="image/*" style="display:none;">
+                        <label for="logo-input" id="logo-label">
+                            <div id="logo-preview">Upload Logo</div>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Company Name</label>
+                        <input type="text" id="comp-name" placeholder="Enter Company Name" value="CoolTech AC Solutions">
+                    </div>
+                    <button type="button" id="save-settings-btn" class="btn-primary full-width">Save Business Profile</button>
                 </div>
-                <button type="button" id="save-settings-btn" class="btn-primary" style="width:100%;">Save Profile</button>
             </div>
 
-            <!-- Tab 2: Create Invoice/Quotation -->
+            <!-- PAGE 2: Create Invoice/Quotation -->
             <div id="create-tab" class="tab-content">
-                <h2>Generate Document</h2>
-                <section class="doc-type-selector">
-                    <label><input type="radio" name="doc-type" value="Quotation" checked> Quotation</label>
-                    <label><input type="radio" name="doc-type" value="Invoice"> Invoice</label>
-                </section>
+                <div class="page-header">
+                    <h2>Generate New Document</h2>
+                    <p>Fill out the fields below to export a high-quality PDF.</p>
+                </div>
 
-                <fieldset>
-                    <legend>Client Details</legend>
-                    <input type="text" id="client-name" placeholder="Client Name">
-                    <input type="text" id="client-phone" placeholder="Client Phone Number">
-                    <input type="date" id="doc-date">
-                </fieldset>
+                <div class="card">
+                    <section class="doc-type-selector">
+                        <label class="radio-label"><input type="radio" name="doc-type" value="Quotation" checked> Quotation</label>
+                        <label class="radio-label"><input type="radio" name="doc-type" value="Invoice"> Invoice</label>
+                    </section>
 
-                <fieldset class="items-section">
-                    <legend>Items & Services</legend>
-                    <div id="items-list"></div>
-                    <button type="button" id="add-item-btn" class="btn-secondary">+ Add Row</button>
-                </fieldset>
+                    <fieldset class="form-fieldset">
+                        <legend>Client Details</legend>
+                        <div class="form-group">
+                            <input type="text" id="client-name" placeholder="Client Name">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="client-phone" placeholder="Client Phone Number">
+                        </div>
+                        <div class="form-group">
+                            <input type="date" id="doc-date">
+                        </div>
+                    </fieldset>
 
-                <div class="total-display">Total: LKR <span id="grand-total">0.00</span></div>
+                    <fieldset class="form-fieldset">
+                        <legend>Items & Services</legend>
+                        <div id="items-list"></div>
+                        <button type="button" id="add-item-btn" class="btn-secondary">+ Add Item / Service Row</button>
+                    </fieldset>
 
-                <div class="action-buttons">
-                    <button type="button" id="save-btn" class="btn-primary">Save Offline</button>
-                    <button type="button" id="download-pdf-btn" class="btn-success">Download PDF</button>
+                    <div class="total-display">Total Amount: LKR <span id="grand-total">0.00</span></div>
+
+                    <div class="action-buttons">
+                        <button type="button" id="save-btn" class="btn-primary">Save Data Offline</button>
+                        <button type="button" id="download-pdf-btn" class="btn-success">Download PDF Document</button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Tab 3: Saved Records -->
+            <!-- PAGE 3: Saved Records -->
             <div id="records-tab" class="tab-content">
-                <h2>Saved Documents</h2>
-                <div id="saved-preview-container" class="saved-card">
-                    <p id="no-data-msg">No recently saved documents found.</p>
+                <div class="page-header">
+                    <h2>Saved History Logs</h2>
+                    <p>View or reload your offline cached documentation.</p>
+                </div>
+                
+                <div id="saved-preview-container" class="card saved-card">
+                    <p id="no-data-msg" class="text-muted">No recently saved items found on this device.</p>
                     <div id="saved-data-details" style="display:none;">
-                        <p><strong>Last Saved:</strong> <span id="saved-doc-type"></span></p>
-                        <p><strong>Client:</strong> <span id="saved-client-name"></span></p>
-                        <p><strong>Amount:</strong> LKR <span id="saved-total-amount"></span></p>
-                        <button type="button" id="load-saved-btn" class="btn-secondary" style="margin-top: 10px;">Reload to Editor</button>
+                        <div class="log-item">
+                            <p><strong>Document Type:</strong> <span id="saved-doc-type" class="badge"></span></p>
+                            <p><strong>Client Reference:</strong> <span id="saved-client-name"></span></p>
+                            <p><strong>Final Pricing:</strong> LKR <span id="saved-total-amount" class="text-primary font-bold"></span></p>
+                        </div>
+                        <button type="button" id="load-saved-btn" class="btn-secondary style-trigger">Reload into Workspace Editor</button>
                     </div>
                 </div>
             </div>
