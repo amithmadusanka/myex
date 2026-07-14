@@ -18,31 +18,89 @@ body {
     max-width: 600px;
     margin: 0 auto;
     background: #ffffff;
-    padding: 20px;
+    padding: 15px;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
-header {
+header h1 {
+    font-size: 22px;
     text-align: center;
-    border-bottom: 2px solid var(--light-color);
-    padding-bottom: 15px;
-    margin-bottom: 20px;
+    color: var(--primary-color);
+    margin: 10px 0 20px 0;
 }
 
-.logo-area {
+/* Tabs Navigation Styling */
+.tab-navigation {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
+    border-bottom: 2px solid var(--light-color);
+    margin-bottom: 20px;
+    gap: 5px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 12px 5px;
+    border: none;
+    background: none;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    color: #757575;
+    border-bottom: 3px solid transparent;
+    transition: 0.3s;
+}
+
+.tab-btn.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+/* Tab Content Logic */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+h2 {
+    font-size: 18px;
+    margin-top: 0;
+    color: #555;
+    border-left: 4px solid var(--primary-color);
+    padding-left: 8px;
+}
+
+fieldset {
+    border: 1px solid #cfd8dc;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+legend {
+    font-weight: bold;
+    padding: 0 5px;
+    color: #555;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
 }
 
 #logo-preview {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     border: 2px dashed var(--primary-color);
-    border-radius: 50%;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -50,52 +108,41 @@ header {
     cursor: pointer;
     background-size: cover;
     background-position: center;
-}
-
-#comp-name {
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-    border: none;
-    border-bottom: 1px solid #ccc;
-    outline: none;
-    color: var(--primary-color);
-}
-
-h1 { font-size: 20px; margin: 10px 0 0 0; color: #555; }
-
-.doc-type-selector {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    margin-bottom: 20px;
-    font-weight: bold;
+    background-color: var(--light-color);
 }
 
 input[type="text"], input[type="date"], input[type="number"] {
     width: 100%;
     padding: 10px;
-    margin: 8px 0;
+    margin: 6px 0 12px 0;
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 15px;
 }
 
+.doc-type-selector {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
 .item-row {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     align-items: center;
     background: var(--light-color);
-    padding: 10px;
+    padding: 8px;
     border-radius: 6px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .item-row input { margin: 0; }
 .item-desc { flex: 2; }
-.item-qty { flex: 0.5; }
-.item-price { flex: 1; }
+.item-qty { flex: 0.6; }
+.item-price { flex: 1.2; }
 
 .btn-primary, .btn-secondary, .btn-success, .btn-danger {
     padding: 12px;
@@ -103,19 +150,18 @@ input[type="text"], input[type="date"], input[type="number"] {
     border-radius: 6px;
     font-weight: bold;
     cursor: pointer;
-    transition: 0.2s;
 }
 
 .btn-primary { background: var(--primary-color); color: white; width: 48%; }
 .btn-success { background: var(--success-color); color: white; width: 48%; }
-.btn-secondary { background: var(--secondary-color); color: white; width: 100%; margin-top: 10px;}
+.btn-secondary { background: var(--secondary-color); color: white; width: 100%; }
 .btn-danger { background: #e53935; color: white; padding: 10px; }
 
 .total-display {
     font-size: 22px;
     font-weight: bold;
     text-align: right;
-    margin: 20px 0;
+    margin: 15px 0;
     color: var(--primary-color);
 }
 
@@ -124,9 +170,17 @@ input[type="text"], input[type="date"], input[type="number"] {
     justify-content: space-between;
 }
 
+.saved-card {
+    background: #f7f9fa;
+    border: 1px solid #e0e0e0;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+/* PDF Print Design */
 .pdf-container { padding: 30px; color: #000; background: #fff;}
 .pdf-header { display: flex; align-items: center; justify-content: space-between; }
 .pdf-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
 .pdf-table th, .pdf-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-.pdf-table th { background-color: #f2f2f2; }
+.pdf-table th { background-color: #f5f5f5; }
 .pdf-total { text-align: right; margin-top: 20px; }
