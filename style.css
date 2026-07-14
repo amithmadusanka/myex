@@ -1,267 +1,87 @@
 :root {
-    --brand-bg: #8c2d19; /* Elegant Catering/Professional Header color from video */
-    --body-bg: #f5eedc;  /* Soft cream color matching your app screen */
+    --brand-bg: #8c2d19;
+    --body-bg: #f5eedc;
     --card-bg: #ffffff;
     --text-dark: #3a3028;
     --border-color: #d8cea8;
     --active-orange: #d35400;
 }
 
-* {
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body { font-family: -apple-system, system-ui, sans-serif; background-color: #111; margin: 0; padding: 0; }
 
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: #111;
-    margin: 0;
-    padding: 0;
-    color: var(--text-dark);
-}
-
-/* Container locking app into mobile look feel */
 .app-container {
-    max-width: 480px;
-    margin: 0 auto;
-    background-color: var(--body-bg);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    max-width: 480px; margin: 0 auto; background-color: var(--body-bg);
+    min-height: 100vh; display: flex; flex-direction: column; position: relative;
 }
 
-/* Top App Bar Styling */
 .app-header {
-    background-color: var(--brand-bg);
-    color: white;
-    padding: 20px 15px 35px 15px;
-    border-bottom-left-radius: 25px;
-    border-bottom-right-radius: 25px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    background-color: var(--brand-bg); color: white; padding: 20px 15px 35px 15px;
+    border-bottom-left-radius: 25px; border-bottom-right-radius: 25px;
+    display: flex; justify-content: space-between; align-items: flex-start;
 }
 
-.brand-tag {
-    background-color: rgba(255,255,255,0.2);
-    padding: 2px 6px;
-    font-size: 10px;
-    font-weight: bold;
-    border-radius: 4px;
-    letter-spacing: 1px;
-}
+.brand-tag { background: rgba(255,255,255,0.2); padding: 2px 6px; font-size: 10px; font-weight: bold; border-radius: 4px; }
+.app-header h1 { font-size: 18px; margin: 4px 0 2px 0; }
+.app-header p { margin: 0; font-size: 12px; opacity: 0.8; }
+.status-badge { background: rgba(0,0,0,0.2); font-size: 11px; padding: 4px 10px; border-radius: 12px; }
 
-.app-header h1 {
-    font-size: 18px;
-    margin: 4px 0 2px 0;
-    font-weight: 700;
-}
+.page-body { flex: 1; padding: 15px; margin-top: -20px; padding-bottom: 90px; }
+.app-page { display: none; }
+.app-page.active { display: block; animation: fadeIn 0.25s ease; }
 
-.app-header p {
-    margin: 0;
-    font-size: 12px;
-    opacity: 0.8;
-}
-
-.status-badge {
-    background-color: rgba(0,0,0,0.2);
-    font-size: 11px;
-    padding: 4px 10px;
-    border-radius: 12px;
-}
-
-/* Content Frame & Page Transitions */
-.page-body {
-    flex: 1;
-    padding: 15px;
-    margin-top: -20px; /* pull cards up over header curve */
-    padding-bottom: 90px; /* avoids navbar clash */
-}
-
-.app-page {
-    display: none;
-}
-
-.app-page.active {
-    display: block;
-    animation: slideIn 0.25s ease-out;
-}
-
-.page-title-area h2 {
-    font-size: 20px;
-    font-weight: 700;
-    margin: 0 0 15px 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.sub-badge {
-    font-size: 11px;
-    padding: 3px 8px;
-    border-radius: 10px;
-}
+.page-title-area h2 { font-size: 19px; margin: 0 0 15px 0; display: flex; align-items: center; justify-content: space-between; }
+.sub-badge { font-size: 11px; padding: 3px 8px; border-radius: 10px; }
 .sub-badge.final { background: #fce4ec; color: #c2185b; }
 .sub-badge.estimate { background: #e0f2f1; color: #004d40; }
 
-/* Custom Form Cards */
-.form-card {
-    background: var(--card-bg);
-    border-radius: 16px;
-    padding: 18px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-    border: 1px solid rgba(0,0,0,0.03);
-}
-
-.input-group {
-    margin-bottom: 14px;
-}
-
-.input-group label {
-    display: block;
-    font-size: 11px;
-    font-weight: 700;
-    color: #7d7265;
-    margin-bottom: 5px;
-    letter-spacing: 0.5px;
-}
+.form-card { background: var(--card-bg); border-radius: 16px; padding: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+.input-row-flex { display: flex; gap: 10px; }
+.flex-1 { flex: 1; }
+.input-group { margin-bottom: 14px; }
+.input-group label { display: block; font-size: 11px; font-weight: 700; color: #7d7265; margin-bottom: 5px; }
 
 input[type="text"], input[type="number"], input[type="date"], textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #e2dac2;
-    border-radius: 10px;
-    background-color: #faf8f2;
-    font-size: 14px;
-    color: var(--text-dark);
+    width: 100%; padding: 12px; border: 1px solid #e2dac2; border-radius: 10px;
+    background-color: #faf8f2; font-size: 14px; color: var(--text-dark);
 }
 
-input:focus, textarea:focus {
-    outline: none;
-    border-color: var(--brand-bg);
-    background-color: #fff;
-}
+.items-fieldset { border: 1px dashed #d5ccb2; border-radius: 10px; padding: 12px; margin: 15px 0; }
+legend { font-size: 11px; font-weight: bold; color: #8c8071; padding: 0 6px; }
+.item-row { display: flex; gap: 6px; margin-bottom: 8px; }
 
-/* Dynamic Rows for Items */
-.items-fieldset {
-    border: 1px dashed #d5ccb2;
-    border-radius: 10px;
-    padding: 12px;
-    margin: 15px 0;
-}
-
-legend {
-    font-size: 11px;
-    font-weight: bold;
-    color: #8c8071;
-    padding: 0 6px;
-}
-
-.item-row {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 8px;
-}
-
-.item-row input { padding: 8px; font-size: 13px;}
-
-.total-bar {
-    text-align: right;
-    font-size: 18px;
-    font-weight: bold;
-    margin: 15px 0;
-    color: var(--brand-bg);
-}
-
-/* Buttons Variants */
-.btn-submit {
-    width: 100%;
-    padding: 14px;
-    border-radius: 10px;
-    font-weight: bold;
-    font-size: 14px;
-    border: none;
-    cursor: pointer;
-}
+.btn-submit { width: 100%; padding: 14px; border-radius: 10px; font-weight: bold; border: none; cursor: pointer; }
 .main-action { background: #e67e22; color: white; }
 .black-btn { background: #2c3e50; color: white; }
 .green-btn { background: #27ae60; color: white; }
-.btn-add {
-    background: none; border: 1px solid var(--brand-bg);
-    color: var(--brand-bg); width: 100%; padding: 8px;
-    border-radius: 8px; font-weight: bold; cursor: pointer;
-}
+.btn-add { background: none; border: 1px solid var(--brand-bg); color: var(--brand-bg); width: 100%; padding: 8px; border-radius: 8px; font-weight: bold; }
 .btn-del { background: #e74c3c; color: white; border: none; border-radius: 6px; padding: 0 10px; }
 
-/* Database and settings styling styles */
-.saved-header { font-weight: bold; font-size: 12px; margin: 20px 0 10px 0; color: #888; }
-.db-list-item {
-    display: flex; justify-content: space-between; align-items: center;
-    background: #fdfcf7; border: 1px solid #ebdcb9; padding: 10px;
-    border-radius: 8px; margin-bottom: 6px;
+.total-bar { text-align: right; font-size: 18px; font-weight: bold; margin: 15px 0; color: var(--brand-bg); }
+.saved-header { font-weight: bold; font-size: 12px; margin-bottom: 15px; color: #7d7265; border-bottom: 1px solid #ddd; padding-bottom: 5px;}
+
+/* History Records Layout styling */
+.history-card {
+    background: #faf8f2; border: 1px solid #e2dac2; padding: 12px;
+    border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
 }
-.logo-uploader-box { display: block; width: 100%; }
-#logo-preview {
-    border: 2px dashed #bbb; border-radius: 10px; padding: 20px;
-    text-align: center; color: #777; background: #fafafa; cursor: pointer;
-}
+.history-meta h4 { margin: 0 0 4px 0; color: #2c3e50; font-size: 14px; }
+.history-meta p { margin: 0; font-size: 12px; color: #7f8c8d; }
+
+#logo-preview { border: 2px dashed #bbb; border-radius: 10px; padding: 20px; text-align: center; color: #777; background: #fafafa; background-size: cover; background-position: center; height: 90px; }
 .footer-credit { text-align: center; font-size: 11px; margin-top: 30px; color: #aaa; }
 
-/* Bottom Tab Navigation Bar Design */
-.bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 480px;
-    background-color: #ffffff;
-    display: flex;
-    box-shadow: 0 -4px 15px rgba(0,0,0,0.06);
-    border-top: 1px solid #eee;
-    padding-bottom: env(safe-area-inset-bottom); /* iOS support */
-    z-index: 999;
-}
+/* Bottom Nav bar rules */
+.bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #fff; display: flex; border-top: 1px solid #eee; padding-bottom: env(safe-area-inset-bottom); z-index: 999; }
+.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 0; background: none; border: none; color: #95a5a6; cursor: pointer;}
+.nav-item.active { color: var(--active-orange); }
+.nav-icon { font-size: 18px; margin-bottom: 2px; }
+.nav-label { font-size: 11px; font-weight: 600; }
 
-.nav-item {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 0;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #95a5a6;
-    transition: color 0.2s;
-}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-.nav-item.active {
-    color: var(--active-orange);
-}
-
-.nav-icon {
-    font-size: 20px;
-    margin-bottom: 2px;
-}
-
-.nav-label {
-    font-size: 11px;
-    font-weight: 600;
-}
-
-@keyframes slideIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Printable PDF */
-.pdf-container { padding: 30px; color: #000; background: #fff;}
-.pdf-header { display: flex; align-items: center; justify-content: space-between; }
-.pdf-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-.pdf-table th, .pdf-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-.pdf-table th { background-color: #f2f2f2; }
-.pdf-total { text-align: right; margin-top: 20px; }
+/* PDF PRINTING STYLES SHEET */
+.pdf-wrapper { padding: 40px; background: #fff; color: #000; font-family: Arial, sans-serif; }
+.pdf-head-row { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #2c3e50; padding-bottom: 15px; }
+.pdf-main-table th { border-bottom: 2px solid #2c3e50; text-transform: uppercase; font-weight: bold; }
+.pdf-main-table td { padding: 10px; border-bottom: 1px solid #e2e8f0; font-size: 13px; }
